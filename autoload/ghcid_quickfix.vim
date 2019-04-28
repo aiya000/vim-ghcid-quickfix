@@ -13,5 +13,17 @@ function! ghcid_quickfix#start(args) abort
 endfunction
 
 function! s:caddexpr_line(channel, line) abort
-  caddexpr substitute(a:line, '', '', 'g')
+  " TODO: what are these > \]0;4, , , 
+  let meaningless_on_quickfix = [
+    \ '\e[\d\+\(;\d\+\)*m',
+    \ '\e[m',
+    \ '',
+    \ '\]0;4',
+    \ '',
+    \ '',
+    \ '',
+  \ ]
+  let pattern_to_ignore = '\(' . join(meaningless_on_quickfix, '\|') . '\)'
+
+  caddexpr substitute(a:line, pattern_to_ignore, '', 'g')
 endfunction
