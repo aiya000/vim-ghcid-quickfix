@@ -1,3 +1,6 @@
+" Please see `ghcid_quickfix#start()`
+let s:TERM_BUFFER_NAME = 'vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
+
 function! ghcid_quickfix#start(args) abort
   call setqflist([])
   let bufnr = s:new_ghcid_quickfix_buffer()
@@ -11,6 +14,7 @@ function! ghcid_quickfix#start(args) abort
     \ 'hidden': v:true,
     \ 'term_kill': 'term',
     \ 'term_rows': 999,
+    \ 'term_name': s:TERM_BUFFER_NAME,
   \ })
 endfunction
 
@@ -55,4 +59,12 @@ function! s:remove_escape_sequences(x) abort
   let pattern_to_remove = '\(' . join(sequences, '\|') . '\)'
 
   return substitute(a:x, pattern_to_remove, '', 'g')
+endfunction
+
+
+function! ghcid_quickfix#stop() abort
+  let bufnr = bufnr(s:TERM_BUFFER_NAME)
+  call term_setkill(bufnr, 'term')
+  execute 'bdelete!' bufnr
+  cclose
 endfunction
