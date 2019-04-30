@@ -3,31 +3,43 @@ let s:TERM_BUFFER_NAME = 'vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
 
 function! ghcid_quickfix#start(args) abort
   call setqflist([])
-  let bufnr = s:new_ghcid_quickfix_buffer()
+  let qf_bufnr = s:open_new_ghcid_quickfix_buffer()
+  let dummy_bufnr = s:make_new_scratch_buffer() " Writing `dummy_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
 
   let ghcid = empty(a:args)
     \ ? 'ghcid'
     \ : 'ghcid ' . a:args
   call term_start(ghcid, {
-    \ 'out_cb': function('s:caddexpr_lines_and_may_refresh', [bufnr]),
-    \ 'err_cb': function('s:caddexpr_lines_and_may_refresh', [bufnr]),
+    \ 'out_io': 'buffer',
+    \ 'err_io': 'buffer',
+    \ 'out_buf': dummy_bufnr,
+    \ 'err_buf': dummy_bufnr,
+    \ 'out_cb': function('s:caddexpr_lines_and_may_refresh', [qf_bufnr]),
+    \ 'err_cb': function('s:caddexpr_lines_and_may_refresh', [qf_bufnr]),
     \ 'hidden': v:true,
     \ 'term_kill': 'term',
-    \ 'term_rows': 999,
     \ 'term_name': s:TERM_BUFFER_NAME,
   \ })
 endfunction
 
-function! s:new_ghcid_quickfix_buffer() abort
+function! s:open_new_ghcid_quickfix_buffer() abort
   copen
   setf ghcid_quickfix
   return winbufnr('.')
 endfunction
 
+function! s:make_new_scratch_buffer() abort
+  new
+  file 
+  setl buftype=nofile
+  let bufnr = winbufnr('.')
+  quit
+  return bufnr
+endfunction
+
 function! s:refresh_ghcid_quickfix_buffer(qf_bufnr) abort
   call setqflist([])
   call setbufvar(a:qf_bufnr, '&filetype', 'ghcid_quickfix')
-  call setbufvar(a:qf_bufnr, '&termwinsize', '999x999')
 endfunction
 
 " Refresh qflist to empty if ghcid is reloading.
