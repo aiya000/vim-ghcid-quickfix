@@ -4,4 +4,4 @@ let b:undo_ftplugin = 'setl ' . join([
   \ 'errorformat<',
 \ ])
 
-let &errorformat = '%f:%l:%c:%m,%f:%l:%c-%n:%m'
+let &errorformat = '%f:%l:%c:%m,%f:%l:%c-%n:%m,%f:(%l\,%c)-%m'
