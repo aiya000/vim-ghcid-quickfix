@@ -76,8 +76,12 @@ endfunction
 
 
 function! ghcid_quickfix#stop() abort
-  let bufnr = bufnr(s:TERM_BUFFER_NAME)
-  call term_setkill(bufnr, 'term')
-  execute 'bdelete!' bufnr
+  let term_bufnr = bufnr(s:TERM_BUFFER_NAME)
+  call term_setkill(term_bufnr, 'term')
+  execute 'bdelete!' term_bufnr
+
+  let output_bufnr = bufnr(s:OUTPUT_BUFFER_NAME)
+  execute 'bdelete' output_bufnr
+
   cclose
 endfunction
