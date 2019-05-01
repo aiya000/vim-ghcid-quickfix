@@ -1,10 +1,11 @@
 " Please see `ghcid_quickfix#start()`
-let s:TERM_BUFFER_NAME = 'vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
+let s:TERM_BUFFER_NAME = 'term-vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
+let s:OUTPUT_BUFFER_NAME = 'output-vim-ghcid-quickfix-ghcid' | lockvar s:OUTPUT_BUFFER_NAME
 
 function! ghcid_quickfix#start(args) abort
   call setqflist([])
   let qf_bufnr = s:open_new_ghcid_quickfix_buffer()
-  let dummy_bufnr = s:make_new_scratch_buffer() " Writing `dummy_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
+  let output_bufnr = s:make_new_scratch_buffer() " Writing `output_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
 
   let ghcid = empty(a:args)
     \ ? 'ghcid'
@@ -12,8 +13,8 @@ function! ghcid_quickfix#start(args) abort
   call term_start(ghcid, {
     \ 'out_io': 'buffer',
     \ 'err_io': 'buffer',
-    \ 'out_buf': dummy_bufnr,
-    \ 'err_buf': dummy_bufnr,
+    \ 'out_buf': output_bufnr,
+    \ 'err_buf': output_bufnr,
     \ 'out_cb': function('s:caddexpr_lines_and_may_refresh', [qf_bufnr]),
     \ 'err_cb': function('s:caddexpr_lines_and_may_refresh', [qf_bufnr]),
     \ 'hidden': v:true,
@@ -30,7 +31,7 @@ endfunction
 
 function! s:make_new_scratch_buffer() abort
   new
-  file 
+  execute 'file' s:OUTPUT_BUFFER_NAME
   setl buftype=nofile
   let bufnr = winbufnr('.')
   quit
