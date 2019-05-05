@@ -28,3 +28,11 @@ dein.nvim with toml
 [[plugins]]
 repo = 'aiya000/vim-ghcid-quickfix'
 ```
+
+# Configuration
+
+Auto open QuickFix window upon errors (default = 1):
+
+```vim
+g:ghcid_open_quickfix = 1
+```
