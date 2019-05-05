@@ -54,6 +54,11 @@ function! s:caddexpr_line_and_may_refresh(qf_bufnr, line) abort
     let line = s:remove_escape_sequences(a:line)
     if match(line, '^Reloading...') isnot -1
       call s:refresh_ghcid_quickfix_buffer(a:qf_bufnr)
+    elseif match(line, '^All good.*') isnot -1
+      cclose
+      echom "All good"
+    elseif match(line, 'error:') isnot -1
+      copen
     endif
 
     caddexpr line
