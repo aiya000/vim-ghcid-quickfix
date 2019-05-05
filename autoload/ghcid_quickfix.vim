@@ -1,3 +1,8 @@
+" Configuration
+if !exists("g:ghcid_open_quickfix")
+    let g:ghcid_open_quickfix = 1
+endif
+
 " Please see `ghcid_quickfix#start()`
 let s:TERM_BUFFER_NAME = 'term-vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
 let s:OUTPUT_BUFFER_NAME = 'output-vim-ghcid-quickfix-ghcid' | lockvar s:OUTPUT_BUFFER_NAME
@@ -58,7 +63,9 @@ function! s:caddexpr_line_and_may_refresh(qf_bufnr, line) abort
       cclose
       echom "All good"
     elseif match(line, 'error:') isnot -1
-      copen
+      if g:ghcid_open_quickfix == 1
+        copen
+      endif
     endif
 
     caddexpr line
