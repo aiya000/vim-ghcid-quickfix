@@ -1,15 +1,10 @@
-" Configuration
-if !exists("g:ghcid_open_quickfix")
-    let g:ghcid_open_quickfix = 1
-endif
-
 " Please see `ghcid_quickfix#start()`
 let s:TERM_BUFFER_NAME = 'term-vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
 let s:OUTPUT_BUFFER_NAME = 'output-vim-ghcid-quickfix-ghcid' | lockvar s:OUTPUT_BUFFER_NAME
 
 function! ghcid_quickfix#start(args) abort
   call setqflist([])
-  let qf_bufnr = s:open_new_ghcid_quickfix_buffer()
+  let qf_bufnr = s:new_ghcid_quickfix_buffer()
   let output_bufnr = s:make_new_scratch_buffer() " Writing `output_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
 
   let ghcid = empty(a:args)
@@ -28,15 +23,24 @@ function! ghcid_quickfix#start(args) abort
   \ })
 endfunction
 
-function! s:open_new_ghcid_quickfix_buffer() abort
+" Make a new quickfix buffer.
+" Also open its window if the option is enabled.
+function! s:new_ghcid_quickfix_buffer() abort
   copen
   setf ghcid_quickfix
-  return winbufnr('.')
+  let qf_bufnr = winbufnr('.')
+
+  if !g:ghcid_quickfix_show_only_error_occured
+    cclose
+  endif
+
+  return qf_bufnr
+return
 endfunction
 
 function! s:make_new_scratch_buffer() abort
   new
-  execute 'file' s:OUTPUT_BUFFER_NAME
+  silent execute 'file' s:OUTPUT_BUFFER_NAME
   setl buftype=nofile
   let bufnr = winbufnr('.')
   quit
@@ -51,21 +55,19 @@ endfunction
 " Refresh qflist to empty if ghcid is reloading.
 function! s:caddexpr_lines_and_may_refresh(qf_bufnr, channel, lines) abort
   for line in split(a:lines, "[\r\n]")
-    call s:caddexpr_line_and_may_refresh(a:qf_bufnr, line)
+    call s:resolve_line(a:qf_bufnr, line)
   endfor
 endfunction
 
-function! s:caddexpr_line_and_may_refresh(qf_bufnr, line) abort
+function! s:resolve_line(qf_bufnr, line) abort
     let line = s:remove_escape_sequences(a:line)
+
     if match(line, '^Reloading...') isnot -1
       call s:refresh_ghcid_quickfix_buffer(a:qf_bufnr)
-    elseif match(line, '^All good.*') isnot -1
-      cclose
-      echom "All good"
-    elseif match(line, 'error:') isnot -1
-      if g:ghcid_open_quickfix == 1
-        copen
-      endif
+    endif
+
+    if !g:ghcid_quickfix_show_only_error_occured
+      call s:notify_for_result(line)
     endif
 
     caddexpr line
@@ -86,6 +88,14 @@ function! s:remove_escape_sequences(x) abort
   return substitute(a:x, pattern_to_remove, '', 'g')
 endfunction
 
+function! s:notify_for_result(line) abort
+  if match(a:line, '^All good.*') isnot -1
+    cclose
+    echomsg 'All good'
+  elseif match(a:line, 'error:') isnot -1
+    copen
+  endif
+endfunction
 
 function! ghcid_quickfix#stop() abort
   let term_bufnr = bufnr(s:TERM_BUFFER_NAME)
