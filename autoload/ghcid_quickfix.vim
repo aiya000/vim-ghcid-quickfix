@@ -97,7 +97,11 @@ function! ghcid_quickfix#stop() abort
   execute 'bdelete!' term_bufnr
 
   let output_bufnr = bufnr(s:OUTPUT_BUFFER_NAME)
-  execute 'bdelete' output_bufnr
+  try
+    execute 'bdelete' output_bufnr
+  catch /E516/
+    " skip this if already deleted
+  endtry
 
   cclose
 endfunction
