@@ -44,7 +44,6 @@ function! s:new_ghcid_quickfix_buffer() abort
   endif
 
   return qf_bufnr
-return
 endfunction
 
 function! s:make_new_scratch_buffer() abort
