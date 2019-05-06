@@ -4,6 +4,10 @@ let s:OUTPUT_BUFFER_NAME = 'output-vim-ghcid-quickfix-ghcid' | lockvar s:OUTPUT_
 
 function! ghcid_quickfix#start(args) abort
   call setqflist([])
+  if s:is_ghcid_quickfix_already_ran()
+    call ghcid_quickfix#stop()
+  endif
+
   let qf_bufnr = s:open_new_ghcid_quickfix_buffer()
   let output_bufnr = s:make_new_scratch_buffer() " Writing `output_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
 
@@ -23,6 +27,11 @@ function! ghcid_quickfix#start(args) abort
   \ })
 endfunction
 
+function! s:is_ghcid_quickfix_already_ran() abort
+  return bufname(s:TERM_BUFFER_NAME) !=# ''
+    \ && bufname(s:OUTPUT_BUFFER_NAME) !=# ''
+endfunction
+
 function! s:open_new_ghcid_quickfix_buffer() abort
   copen
   setf ghcid_quickfix
@@ -31,7 +40,14 @@ endfunction
 
 function! s:make_new_scratch_buffer() abort
   new
-  execute 'file' s:OUTPUT_BUFFER_NAME
+
+  try
+    execute 'file' s:OUTPUT_BUFFER_NAME
+  catch /E95/
+    execute 'bdelete!' s:OUTPUT_BUFFER_NAME
+    execute 'file' s:OUTPUT_BUFFER_NAME
+  endtry
+
   setl buftype=nofile
   let bufnr = winbufnr('.')
   quit
