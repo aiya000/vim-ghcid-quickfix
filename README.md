@@ -8,11 +8,13 @@ Increse your Haskell development via [ghcid](https://github.com/ndmitchell/ghcid
 
 This allows to open ghcid as the quickfix buffer, by `:GhcidQuickfixStart`.
 
-**For both Vim and NeoVim.**
-
 When you edited a .hs, it reloads automatically!
 
 ![](./sample.gif)
+
+# :grey_exclamation: Requirements :grey_exclamation:
+
+- Vim 8.0 or later with `+terminal`
 
 # :dizzy: How to install :dizzy:
 
