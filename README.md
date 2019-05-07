@@ -12,6 +12,8 @@ When you edited a .hs, it reloads automatically!
 
 ![](./sample.gif)
 
+You can read compile errors/warnings by about 1sec.
+
 # :grey_exclamation: Requirements :grey_exclamation:
 
 - Vim 8.0 or later with `+terminal`
