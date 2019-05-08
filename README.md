@@ -14,30 +14,30 @@ When you edited a .hs, it reloads automatically!
 
 You can read compile errors/warnings by about 1sec.
 
-# :grey_exclamation: Requirements :grey_exclamation:
+## :grey_exclamation: Requirements :grey_exclamation:
 
 - Vim 8.0 or later with `+terminal`
 
-# :dizzy: How to install :dizzy:
+## :dizzy: How to install :dizzy:
 
-No package manager
+### No package manager
 
 clone this repo into `$MYVIMRC/pack/haskell/start/`
 
-dein.nvim
+### dein.nvim
 
 ```haskell
 call dein#add('aiya000/vim-ghcid-quickfix')
 ```
 
-dein.nvim with toml
+### dein.nvim with toml
 
 ```toml
 [[plugins]]
 repo = 'aiya000/vim-ghcid-quickfix'
 ```
 
-# Configuration
+## Configuration
 
 Auto open QuickFix window upon errors (default = v:true):
 
