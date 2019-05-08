@@ -20,6 +20,10 @@ You can read compile errors/warnings by about 1sec.
 
 # :dizzy: How to install :dizzy:
 
+No package manager
+
+clone this repo into `$MYVIMRC/pack/haskell/start/`
+
 dein.nvim
 
 ```haskell
