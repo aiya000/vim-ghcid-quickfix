@@ -81,7 +81,7 @@ function! s:resolve_line(qf_bufnr, line) abort
     call s:refresh_ghcid_quickfix_buffer(a:qf_bufnr)
   endif
 
-  if !g:ghcid_quickfix_show_only_error_occured
+  if g:ghcid_quickfix_show_only_error_occured
     call s:notify_for_result(line)
   endif
 
