@@ -8,9 +8,13 @@ function! ghcid_quickfix#start(args) abort
     call ghcid_quickfix#stop()
   endif
 
-  let qf_bufnr = s:new_ghcid_quickfix_buffer()
+  let qf_bufnr = s:make_new_ghcid_quickfix_buffer()
   let output_bufnr = s:make_new_scratch_buffer() " Writing `output_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
+  if !g:ghcid_quickfix_show_only_error_occured
+    copen
+  endif
 
+  echomsg 'ghcid-quickfix started.'
   let ghcid = empty(a:args)
     \ ? 'ghcid'
     \ : 'ghcid ' . a:args
@@ -33,17 +37,11 @@ function! s:is_ghcid_quickfix_already_ran() abort
 endfunction
 
 " Make a new quickfix buffer.
-" Also open its window if the option is enabled.
-function! s:new_ghcid_quickfix_buffer() abort
+function! s:make_new_ghcid_quickfix_buffer() abort
   copen
   setf ghcid_quickfix
   let qf_bufnr = winbufnr('.')
-
-  if !g:ghcid_quickfix_show_only_error_occured
-    echomsg 'ghcid-quickfix started.'
-    cclose
-  endif
-
+  cclose  " At here, we don't want to open the quickfix window
   return qf_bufnr
 endfunction
 
