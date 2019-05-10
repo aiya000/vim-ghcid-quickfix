@@ -39,7 +39,7 @@ repo = 'aiya000/vim-ghcid-quickfix'
 
 ## Configuration
 
-Auto open QuickFix window upon errors (default = v:true):
+Auto open QuickFix window upon errors (default = v:false):
 
 ```vim
 let g:ghcid_quickfix_show_only_error_occured = v:true
