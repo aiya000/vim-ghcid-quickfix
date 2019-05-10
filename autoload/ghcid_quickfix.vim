@@ -8,11 +8,11 @@ function! ghcid_quickfix#start(args) abort
     call ghcid_quickfix#stop()
   endif
 
-  let qf_bufnr = s:make_new_ghcid_quickfix_buffer()
+  let qf_bufnr = s:make_a_ghcid_quickfix_buffer()
   let output_bufnr = s:make_new_scratch_buffer() " Writing `output_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
-  if !g:ghcid_quickfix_show_only_error_occured
-    copen
-  endif
+  let event_hooks = s:make_new_event_hooks(qf_bufnr)
+
+  call event_hooks.on_quickfix_buffer_created()
 
   echomsg 'ghcid-quickfix started.'
   let ghcid = empty(a:args)
@@ -23,8 +23,8 @@ function! ghcid_quickfix#start(args) abort
     \ 'err_io': 'buffer',
     \ 'out_buf': output_bufnr,
     \ 'err_buf': output_bufnr,
-    \ 'out_cb': function('s:caddexpr_lines_and_may_refresh', [qf_bufnr]),
-    \ 'err_cb': function('s:caddexpr_lines_and_may_refresh', [qf_bufnr]),
+    \ 'out_cb': function('s:caddexpr_lines_and_may_refresh', [event_hooks]),
+    \ 'err_cb': function('s:caddexpr_lines_and_may_refresh', [event_hooks]),
     \ 'hidden': v:true,
     \ 'term_kill': 'term',
     \ 'term_name': s:TERM_BUFFER_NAME,
@@ -36,8 +36,8 @@ function! s:is_ghcid_quickfix_already_ran() abort
     \ && bufname(s:OUTPUT_BUFFER_NAME) !=# ''
 endfunction
 
-" Make a new quickfix buffer.
-function! s:make_new_ghcid_quickfix_buffer() abort
+" Make a already existent or ne quickfix buffer.
+function! s:make_a_ghcid_quickfix_buffer() abort
   copen
   setf ghcid_quickfix
   let qf_bufnr = winbufnr('.')
@@ -61,29 +61,17 @@ function! s:make_new_scratch_buffer() abort
   return bufnr
 endfunction
 
-function! s:refresh_ghcid_quickfix_buffer(qf_bufnr) abort
-  call setqflist([])
-  call setbufvar(a:qf_bufnr, '&filetype', 'ghcid_quickfix')
-endfunction
-
 " Refresh qflist to empty if ghcid is reloading.
-function! s:caddexpr_lines_and_may_refresh(qf_bufnr, channel, lines) abort
+function! s:caddexpr_lines_and_may_refresh(event_hooks, channel, lines) abort
   for line in split(a:lines, "[\r\n]")
-    call s:resolve_line(a:qf_bufnr, line)
+    call s:resolve_line(a:event_hooks, line)
   endfor
 endfunction
 
-function! s:resolve_line(qf_bufnr, line) abort
+function! s:resolve_line(event_hooks, line) abort
   let line = s:remove_escape_sequences(a:line)
 
-  if match(line, '^Reloading...') isnot -1
-    call s:refresh_ghcid_quickfix_buffer(a:qf_bufnr)
-  endif
-
-  if g:ghcid_quickfix_show_only_error_occured
-    call s:notify_for_result(line)
-  endif
-
+  call a:event_hooks.on_outputting_line(line)
   caddexpr line
 endfunction
 
@@ -102,13 +90,10 @@ function! s:remove_escape_sequences(x) abort
   return substitute(a:x, pattern_to_remove, '', 'g')
 endfunction
 
-function! s:notify_for_result(line) abort
-  if match(a:line, '^All good.*') isnot -1
-    cclose
-    echomsg 'All good'
-  elseif match(a:line, 'error:') isnot -1
-    copen
-  endif
+function! s:make_new_event_hooks(qf_bufnr) abort
+  return g:ghcid_quickfix_show_only_error_occured
+    \ ? ghcid_quickfix#event_hooks#show_only_error_occured#new(a:qf_bufnr)
+    \ : ghcid_quickfix#event_hooks#default#new(a:qf_bufnr)
 endfunction
 
 function! ghcid_quickfix#stop() abort
