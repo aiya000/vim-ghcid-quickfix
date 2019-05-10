@@ -40,6 +40,7 @@ function! s:new_ghcid_quickfix_buffer() abort
   let qf_bufnr = winbufnr('.')
 
   if !g:ghcid_quickfix_show_only_error_occured
+    echomsg 'ghcid-quickfix started.'
     cclose
   endif
 
