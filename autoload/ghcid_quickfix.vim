@@ -14,7 +14,6 @@ function! ghcid_quickfix#start(make_new_event_hooks, args) abort
 
   call event_hooks.on_quickfix_buffer_created()
 
-  echomsg 'ghcid-quickfix started.'
   let ghcid = empty(a:args)
     \ ? 'ghcid'
     \ : 'ghcid ' . a:args

@@ -5,6 +5,7 @@ function! ghcid_quickfix#event_hooks#show_only_error_occured#new(qf_bufnr) abort
   \ }
 
   function! instance.on_quickfix_buffer_created() abort dict
+    echomsg 'ghcid-quickfix started.'
   endfunction
 
   function! instance.on_outputting_line(line) abort dict

@@ -13,6 +13,7 @@ function! ghcid_quickfix#event_hooks#default#new(qf_bufnr) abort
 
   function! instance.on_quickfix_buffer_created() abort dict
     copen
+    echomsg 'ghcid-quickfix started.'
   endfunction
 
   function! instance.on_outputting_line(line) abort dict
