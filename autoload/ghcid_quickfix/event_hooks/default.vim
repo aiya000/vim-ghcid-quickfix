@@ -17,7 +17,7 @@ function! ghcid_quickfix#event_hooks#default#new(qf_bufnr) abort
   endfunction
 
   function! instance.on_outputting_line(line) abort dict
-    if match(a:line, '^Reloading\.\.\.') isnot -1
+    if ghcid_quickfix#lines#match_reloading(a:line)
       call setqflist([])
       call setbufvar(self.qf_bufnr, '&filetype', 'ghcid_quickfix')
     endif

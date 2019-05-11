@@ -38,11 +38,11 @@ function! s:new_fake_event_hooks(_) abort
   endfunction
 
   function! instance.on_outputting_line(line) abort dict
-    if match(a:line, '^Reloading\.\.\.') isnot -1
+    if ghcid_quickfix#lines#match_reloading(a:line)
       let self.quickfix = s:QUICKFIX_CLOSED
-    elseif match(a:line, '^All good.*') isnot -1
+    elseif ghcid_quickfix#lines#match_all_good(a:line)
       let self.quickfix = s:QUICKFIX_CLOSED
-    elseif match(a:line, 'error:') isnot -1
+    elseif ghcid_quickfix#lines#match_error(a:line)
       let self.quickfix = s:QUICKFIX_OPENED
     endif
   endfunction

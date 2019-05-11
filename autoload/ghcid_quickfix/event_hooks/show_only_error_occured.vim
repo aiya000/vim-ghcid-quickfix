@@ -9,13 +9,13 @@ function! ghcid_quickfix#event_hooks#show_only_error_occured#new(qf_bufnr) abort
   endfunction
 
   function! instance.on_outputting_line(line) abort dict
-    if match(a:line, '^Reloading\.\.\.') isnot -1
+    if ghcid_quickfix#lines#match_reloading(a:line)
       call setqflist([])
       call setbufvar(self.qf_bufnr, '&filetype', 'ghcid_quickfix')
-    elseif match(a:line, '^All good.*') isnot -1
+    elseif ghcid_quickfix#lines#match_all_good(a:line)
       cclose
       echomsg 'All good'
-    elseif match(a:line, 'error:') isnot -1
+    elseif ghcid_quickfix#lines#match_error(a:line)
       copen
     endif
   endfunction
