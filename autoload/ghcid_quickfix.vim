@@ -2,15 +2,15 @@
 let s:TERM_BUFFER_NAME = 'term-vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
 let s:OUTPUT_BUFFER_NAME = 'output-vim-ghcid-quickfix-ghcid' | lockvar s:OUTPUT_BUFFER_NAME
 
-function! ghcid_quickfix#start(args) abort
+function! ghcid_quickfix#start(make_new_event_hooks, args) abort
   call setqflist([])
   if s:is_ghcid_quickfix_already_ran()
     call ghcid_quickfix#stop()
   endif
 
   let qf_bufnr = s:make_a_ghcid_quickfix_buffer()
-  let output_bufnr = s:make_new_scratch_buffer() " Writing `output_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
-  let event_hooks = s:make_new_event_hooks(qf_bufnr)
+  let output_bufnr = s:make_new_scratch_buffer()  " Writing `output_bufnr` removes a dependency to the terminal buffer. e.g. This avoids unintended line spliting.
+  let event_hooks = a:make_new_event_hooks(qf_bufnr)
 
   call event_hooks.on_quickfix_buffer_created()
 
@@ -88,12 +88,6 @@ function! s:remove_escape_sequences(x) abort
   let pattern_to_remove = '\(' . join(sequences, '\|') . '\)'
 
   return substitute(a:x, pattern_to_remove, '', 'g')
-endfunction
-
-function! s:make_new_event_hooks(qf_bufnr) abort
-  return g:ghcid_quickfix_show_only_error_occured
-    \ ? ghcid_quickfix#event_hooks#show_only_error_occured#new(a:qf_bufnr)
-    \ : ghcid_quickfix#event_hooks#default#new(a:qf_bufnr)
 endfunction
 
 function! ghcid_quickfix#stop() abort
