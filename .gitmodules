@@ -1,3 +1,0 @@
-[submodule "test/test-vim-ghcid-quickfix"]
-	path = test/test-vim-ghcid-quickfix
-	url = https://github.com/aiya000/test-vim-ghcid-quickfix
