@@ -1,0 +1,51 @@
+call themis#helper('command').with(themis#helper('assert'))
+call themis#option('runtimepath', ['..'])
+
+let s:QUICKFIX_OPENED = 'quickfix-opened' | lockvar s:QUICKFIX_OPENED
+let s:QUICKFIX_CLOSED = 'quickfix-closed' | lockvar s:QUICKFIX_CLOSED
+
+function! RunMockWith(dir) abort
+  let state = s:new_fake_event_hooks(v:null)
+
+  let path = $PATH
+  let $PATH = $PATH . ':' . a:dir
+  try
+    call ghcid_quickfix#start({ _ -> state }, '')
+  finally
+    let $PATH = path
+  endtry
+
+  return state
+endfunction
+
+" Like g:ghcid_quickfix_show_only_error_occured.
+function! s:new_fake_event_hooks(_) abort
+  " quickfix: a fake state.
+  let instance = {
+    \ 'quickfix': s:QUICKFIX_CLOSED,
+  \ }
+
+  function! instance.is_quickfix_opened() abort dict
+    return self.quickfix ==# s:QUICKFIX_OPENED
+  endfunction
+
+  function! instance.is_quickfix_closed() abort dict
+    return self.quickfix ==# s:QUICKFIX_CLOSED
+  endfunction
+
+  function! instance.on_quickfix_buffer_created() abort dict
+    let self.quickfix = s:QUICKFIX_OPENED
+  endfunction
+
+  function! instance.on_outputting_line(line) abort dict
+    if match(a:line, '^Reloading\.\.\.') isnot -1
+      let self.quickfix = s:QUICKFIX_CLOSED
+    elseif match(a:line, '^All good.*') isnot -1
+      let self.quickfix = s:QUICKFIX_CLOSED
+    elseif match(a:line, 'error:') isnot -1
+      let self.quickfix = s:QUICKFIX_OPENED
+    endif
+  endfunction
+
+  return instance
+endfunction
