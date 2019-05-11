@@ -1,0 +1,25 @@
+language: generic
+
+install:
+  - if [ ! -d ~/cache ] ; then
+    mkdir ~/cache &&
+    git clone https://github.com/thinca/vim-themis ~/cache/vim-themis &&
+    git clone https://github.com/vim/vim ~/cache/vim &&
+    cd ~/cache/vim &&
+    ./configure &&
+    make;
+    fi
+  - export THEMIS_VIM=~/cache/vim/src/vim
+
+cache:
+  directories:
+    - $HOME/cache
+
+before_script:
+  - ~/cache/vim/src/vim --version
+
+script:
+  - ~/cache/vim-themis/bin/themis ~/build/aiya000/vim-ghcid-quickfix/test/ghcid_quickfix/show_only_error_occured.vimspec --reporter spec
+
+branches:
+  - master
