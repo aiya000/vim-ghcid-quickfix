@@ -94,22 +94,22 @@ COMMANDS					*ghcid_quickfix-commands*
 ------------------------------------------------------------------------------
 FUNCTIONS					*ghcid_quickfix-functions*
 
-ghcid_quickfix#start({args})			*ghcid_quickfix#start()*
+ghcid_quickfix#start({make-new-event-hooks}, {args})			*ghcid_quickfix#start()*
 
 	The Implementation for |:GhcidQuickfixStart|.
+
+	{make-new-event-hooks} is a |funcref|to make the `event hooks` . The
+	`event hooks` is that argues how to do actions when events occured.
+
+	Please see |ghcid_quickfix#event_hooks#default#new()| or
+	|ghcid_quickfix#event_hooks#show_only_error_occured#new()| on the code
+	for example of {make-new-event-hooks}.
 
 
 ghcid_quickfix#stop()				*ghcid_quickfix#stop()*
 
 	The Implementation for |:GhcidQuickfixStop|.
 
-
-==============================================================================
-CHANGELOG					*ghcid_quickfix-changelog*
-
-	2019-05-10
-	Change the default of g:ghcid_quickfix_show_only_error_occured to
-	v:false.
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:
