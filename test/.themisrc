@@ -21,8 +21,10 @@ endfunction
 " Like g:ghcid_quickfix_show_only_error_occured.
 function! s:new_fake_event_hooks(_) abort
   " quickfix: a fake state.
+  " error_appeared_at_current: Did an error appear at between 'started or reloaded' and 'all good'?
   let instance = {
     \ 'quickfix': s:QUICKFIX_CLOSED,
+    \ 'error_appeared_at_current': v:false,
   \ }
 
   function! instance.is_quickfix_opened() abort dict
@@ -37,12 +39,15 @@ function! s:new_fake_event_hooks(_) abort
     let self.quickfix = s:QUICKFIX_OPENED
   endfunction
 
+  call themis#log(system('which ghcid'))
   function! instance.on_outputting_line(line) abort dict
     if ghcid_quickfix#lines#match_reloading(a:line)
+      let self.error_appeared_at_current = v:false
       let self.quickfix = s:QUICKFIX_CLOSED
-    elseif ghcid_quickfix#lines#match_all_good(a:line)
+    elseif ghcid_quickfix#lines#match_all_good(a:line) && !self.error_appeared_at_current
       let self.quickfix = s:QUICKFIX_CLOSED
     elseif ghcid_quickfix#lines#match_error(a:line)
+      let self.error_appeared_at_current = v:true
       let self.quickfix = s:QUICKFIX_OPENED
     endif
   endfunction
