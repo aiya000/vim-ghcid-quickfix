@@ -20,6 +20,3 @@ before_script:
 
 script:
   - ~/cache/vim-themis/bin/themis ~/build/aiya000/vim-ghcid-quickfix/test/ghcid_quickfix/show_only_error_occured.vimspec --reporter spec
-
-branches:
-  - master
