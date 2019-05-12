@@ -1,13 +1,16 @@
 Describe ghcid_quickfix#event_hooks#show_only_error_occured
   It opens the quickfix window only if an error occured
+    Assert match(system('which ghcid'), 'vim-ghcid-quickfix/test/bin/error/ghcid$') isnot -1
     Assert RunMockWith('error').is_quickfix_opened()
   End
 
   It stays opened if an error occured and then "All good" occured
+    Assert match(system('which ghcid'), 'vim-ghcid-quickfix/test/bin/error-and-allgood/ghcid$') isnot -1
     Assert RunMockWith('error-and-allgood').is_quickfix_opened()
   End
 
   It closes the quickfix window if an error occured and then it fixed
+    Assert match(system('which ghcid'), 'vim-ghcid-quickfix/test/bin/error-and-reload-and-allgood/ghcid$') isnot -1
     Assert RunMockWith('error-and-reload-and-allgood').is_quickfix_closed()
   End
 End
