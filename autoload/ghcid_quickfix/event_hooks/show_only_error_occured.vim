@@ -17,6 +17,7 @@ function! ghcid_quickfix#event_hooks#show_only_error_occured#new(qf_bufnr) abort
       echomsg 'All good'
     elseif ghcid_quickfix#lines#match_error(a:line)
       copen
+      wincmd p
     endif
   endfunction
 
