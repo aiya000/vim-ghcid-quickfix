@@ -67,8 +67,9 @@ VARIABLES					*ghcid_quickfix-variables*
 g:ghcid_quickfix_show_only_error_occured
 	default value: v:false
 
-	Open the quickfix window only if some errors occured.
-	Also 'All good' shows on Vim's cmdline.
+	If this is v:true,
+	this plugin opens the quickfix window only if some errors/warnings
+	occured. And shows 'All good' on Vim's cmdline if the build succeed.
 
 
 ------------------------------------------------------------------------------
