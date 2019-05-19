@@ -15,9 +15,6 @@ function! ghcid_quickfix#event_hooks#show_only_error_occured#new(qf_bufnr) abort
     elseif ghcid_quickfix#lines#match_all_good(a:line)
       cclose
       echomsg 'All good'
-    elseif ghcid_quickfix#lines#match_warning(a:line)
-      cclose
-      echomsg 'Compiled with warnings'
     elseif ghcid_quickfix#lines#match_error(a:line)
       copen
       wincmd p
