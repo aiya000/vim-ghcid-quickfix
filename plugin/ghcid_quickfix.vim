@@ -9,8 +9,15 @@ command! -bar -nargs=* GhcidQuickfixStart call ghcid_quickfix#start(function('s:
 command! -bar GhcidQuickfixStop call ghcid_quickfix#stop()
 
 function! s:make_new_event_hooks(qf_bufnr) abort
-  let show_only_error_occured = get(g:, 'ghcid_quickfix_show_only_error_occured', v:false)
-  return show_only_error_occured
-    \ ? ghcid_quickfix#event_hooks#show_only_error_occured#new(a:qf_bufnr)
-    \ : ghcid_quickfix#event_hooks#default#new(a:qf_bufnr)
+  let showing = get(g:, 'ghcid_quickfix_showing', v:null)
+  return
+    \ showing is v:null
+      \ ? ghcid_quickfix#event_hooks#quickfix_on_start#new(a:qf_bufnr) :
+    \ showing ==# 'quickfix_on_start'
+      \ ? ghcid_quickfix#event_hooks#quickfix_on_start#new(a:qf_bufnr) :
+    \ showing ==# 'quickfix_on_error'
+      \ ? ghcid_quickfix#event_hooks#quickfix_on_error#new(a:qf_bufnr) :
+    \ showing ==# 'popup_always'
+      \ ? ghcid_quickfix#event_hooks#popup_always#new(a:qf_bufnr) :
+    \ execute(printf('throw "unknown value of g:ghcid_quickfix_showing: "%s"', showing))
 endfunction

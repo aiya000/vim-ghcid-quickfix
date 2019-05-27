@@ -1,10 +1,18 @@
-" Please see `ghcid_quickfix#event_hooks#default#new` for what is made by this.
-function! ghcid_quickfix#event_hooks#show_only_error_occured#new(qf_bufnr) abort
+" Make new instance to argue how to do actions when 'events' occured.
+" (A mock for tests.)
+"
+" 'events'
+" - on_reloading(): Be called when ghcid says '^Reloading...' (before :caddexpr).
+" - on_outputting_line(line): Be called before showing a line on :caddexpr.
+"
+" qf_bufnr: a quickfix buffer that should be output ghcid lines.
+function! ghcid_quickfix#event_hooks#quickfix_on_start#new(qf_bufnr) abort
   let instance = {
     \ 'qf_bufnr': a:qf_bufnr,
   \ }
 
   function! instance.on_quickfix_buffer_created() abort dict
+    copen
     echomsg 'ghcid-quickfix started.'
   endfunction
 
@@ -12,12 +20,6 @@ function! ghcid_quickfix#event_hooks#show_only_error_occured#new(qf_bufnr) abort
     if ghcid_quickfix#lines#match_reloading(a:line)
       call setqflist([])
       call setbufvar(self.qf_bufnr, '&filetype', 'ghcid_quickfix')
-    elseif ghcid_quickfix#lines#match_all_good(a:line)
-      cclose
-      echomsg 'All good'
-    elseif ghcid_quickfix#lines#match_error(a:line)
-      copen
-      wincmd p
     endif
   endfunction
 
