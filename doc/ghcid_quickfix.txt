@@ -44,7 +44,7 @@ https://github.com/user/ghcid_quickfix.vim
 
 ghcid is very faster loader for GHC compile errors/warnings. You can read
 the compile errors/warnings by about 1sec.
- 
+
 ghcid:
 https://github.com/ndmitchell/ghcid
 
@@ -63,19 +63,28 @@ INTERFACE					*ghcid_quickfix-interface*
 ------------------------------------------------------------------------------
 VARIABLES					*ghcid_quickfix-variables*
 
-				*g:ghcid_quickfix_show_only_error_occured*
-g:ghcid_quickfix_show_only_error_occured
-	default value: v:false
+						*g:ghcid_quickfix_showing*
+g:ghcid_quickfix_showing
+	value: 'quickfix_on_start', 'quickfix_on_error', or 'popup_always'
+	default: 'quickfix_on_start'
 
-	If this is v:true,
-	this plugin opens the quickfix window only if some errors/warnings
-	occured. And shows 'All good' on Vim's cmdline if the build succeed.
+	When do the quickfix window open.
+
+	If 'quickfix_on_start', it does on |:GhcidQuickfixStart|executed.
+
+	If 'quickfix_on_error', it does on errors occured.
+	Also shows 'All good' on Vim's cmdline if the build succeed.
+
+	(Requirement: `has('popup_create')` is v:true.)
+	If 'popup_always', it is simular to 'quickfix_on_error', but
+	messages shows on |popup_window|. In background, errors and warnings
+	are put into the quickfix.
 
 
 ------------------------------------------------------------------------------
 COMMANDS					*ghcid_quickfix-commands*
 
-:GhcidQuickfixStart {ghcid-options}			*:GhcidQuickfixStart*
+:GhcidQuickfixStart {ghcid-options}		*:GhcidQuickfixStart*
 
 	Starts ghcid with loading compile errors/warnings and opens the
 	quickfix window.
@@ -95,7 +104,8 @@ COMMANDS					*ghcid_quickfix-commands*
 ------------------------------------------------------------------------------
 FUNCTIONS					*ghcid_quickfix-functions*
 
-ghcid_quickfix#start({make-new-event-hooks}, {args})			*ghcid_quickfix#start()*
+						*ghcid_quickfix#start()*
+ghcid_quickfix#start({make-new-event-hooks}, {args})
 
 	The Implementation for |:GhcidQuickfixStart|.
 
@@ -111,6 +121,22 @@ ghcid_quickfix#stop()				*ghcid_quickfix#stop()*
 
 	The Implementation for |:GhcidQuickfixStop|.
 
+
+------------------------------------------------------------------------------
+CHANGELOG					*ghcid_quickfix-changelog*
+
+	2019-05-27:
+	- Remove g:ghcid_quickfix_show_only_error_occured
+	- Add g:ghcid_quickfix_showing
+
+	You can use
+>
+	let g:ghcid_quickfix_showing = 'quickfix_on_error'
+<
+	instead of
+>
+	let g:ghcid_quickfix_show_only_error_occured = v:true
+<
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:
