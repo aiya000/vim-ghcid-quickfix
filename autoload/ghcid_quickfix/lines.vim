@@ -21,3 +21,9 @@ endfunction
 function! ghcid_quickfix#lines#match_warning(line) abort
   return match(a:line, 'warning:') isnot -1
 endfunction
+
+" Returns v:true if a:line matches '^No files loaded, GHCi is not working properly\.$'.
+" Or returns v:false.
+function! ghcid_quickfix#lines#match_no_files_loaded(line) abort
+  return match(a:line, '^No files loaded, GHCi is not working properly\.$') isnot -1
+endfunction
