@@ -21,7 +21,7 @@ function! ghcid_quickfix#event_hooks#popup_always#new(qf_bufnr) abort
 
   function! instance.popup_notification(string, options) abort
     call popup_create(a:string, extend({
-      \ 'maxwidth': len(a:string),
+      \ 'maxwidth': strlen(a:string),
       \ 'line': self.next_popup_line,
       \ 'time': 3000,
       \ 'tab': -1,
