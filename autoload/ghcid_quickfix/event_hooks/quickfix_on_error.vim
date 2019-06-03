@@ -14,7 +14,7 @@ function! ghcid_quickfix#event_hooks#quickfix_on_error#new(qf_bufnr) abort
       call setbufvar(self.qf_bufnr, '&filetype', 'ghcid_quickfix')
     elseif ghcid_quickfix#lines#match_all_good(a:line)
       cclose
-      echomsg 'All good'
+      call s:notify_all_good()
     elseif ghcid_quickfix#lines#match_error(a:line)
       copen
       wincmd p
@@ -22,4 +22,18 @@ function! ghcid_quickfix#event_hooks#quickfix_on_error#new(qf_bufnr) abort
   endfunction
 
   return instance
+endfunction
+
+function! s:notify_all_good() abort
+  call s:popup_notification('All good', {})
+  echomsg 'All good'
+endfunction
+
+function! s:popup_notification(string, options) abort
+  call popup_create(a:string, extend({
+    \ 'maxwidth': strlen(a:string),
+    \ 'time': 3000,
+    \ 'tab': -1,
+    \ 'border': [],
+  \ }, a:options))
 endfunction
