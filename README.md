@@ -22,8 +22,8 @@ You can read compile errors/warnings by about 1sec.
 
 ## :grey_exclamation: Requirements :grey_exclamation:
 
-- Vim 8.0 or later with `+terminal`
 - ghcid to your `$PATH`
+- Vim 8.0 or later with `+terminal`
 
 ## :dizzy: How to install :dizzy:
 
@@ -44,7 +44,7 @@ call dein#add('aiya000/vim-ghcid-quickfix')
 repo = 'aiya000/vim-ghcid-quickfix'
 ```
 
-## Configuration
+## :grey_exclamation: Configuration :grey_exclamation:
 
 Auto open QuickFix window upon errors:
 
