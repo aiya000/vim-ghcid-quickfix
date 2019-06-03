@@ -12,6 +12,12 @@ When you edited a .hs, it reloads automatically!
 
 ![](./sample.gif)
 
+(quickfix_on_error)
+![](./quickfix_on_error.gif)
+
+(popup-always)
+![](./popup-always.gif)
+
 You can read compile errors/warnings by about 1sec.
 
 ## :grey_exclamation: Requirements :grey_exclamation:
@@ -51,5 +57,3 @@ Or 'popup_always' to popup all lines, using Vim's popup window.
 ```vim
 let g:ghcid_quickfix_showing = 'popup_always'
 ```
-
-![](popup-always.gif)
