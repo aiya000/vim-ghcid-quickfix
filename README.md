@@ -31,13 +31,13 @@ You can read compile errors/warnings by about 1sec.
 
 clone this repo into `$MYVIMRC/pack/haskell/start/`
 
-### dein.nvim
+### dein.vim
 
 ```haskell
 call dein#add('aiya000/vim-ghcid-quickfix')
 ```
 
-### dein.nvim with toml
+### dein.vim with toml
 
 ```toml
 [[plugins]]
