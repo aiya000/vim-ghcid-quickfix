@@ -63,23 +63,53 @@ INTERFACE					*ghcid_quickfix-interface*
 ------------------------------------------------------------------------------
 VARIABLES					*ghcid_quickfix-variables*
 
+						*g:ghcid_quickfix*
+g:ghcid_quickfix
+	default: `{}`
+	The whole of this plugin configurations.
+
 						*g:ghcid_quickfix_showing*
-g:ghcid_quickfix_showing
-	value: 'quickfix_on_start', 'quickfix_on_error', or 'popup_always'
+g:ghcid_quickfix.showing
+	value: a string 'quickfix_on_start', 'quickfix_on_error',
+		'popup_always' or a function
 	default: 'quickfix_on_start'
 
-	When do the quickfix window open.
+	How to do operations of
+	|:GhcidQuickfixStart|(`ghcid_quickfix#start()`).
 
-	If 'quickfix_on_start', it does on |:GhcidQuickfixStart|executed.
+	If this is 'quickfix_on_start', show ghcid progress on quickfix.
 
-	If 'quickfix_on_error', it does on errors occured.
-	Also shows 'All good' on Vim's cmdline if the build succeed.
+	If this is 'quickfix_on_error', show the quickfix window if error
+	occurred. also hide the quickfix window if ghcid says 'All good'.
 
 	(Requirement: `has('popup_create')` is v:true.)
 	If 'popup_always', it is simular to 'quickfix_on_error', but
 	messages shows on |popup_window|. In background, errors and warnings
 	are put into the quickfix.
 
+	Or you can define this as a function.
+	(Please see `./plugin/ghcid_quickfix.vim` about this.)
+>
+	function s:make_ghcid_event_hooks_to_show_started_on_popup(qf_bufnr) abort
+	  const super = ghcid_quickfix#event_hooks#quickfix_on_error#new(a:qf_bufnr)
+	  const this = copy(super)
+
+	  function! this.on_quickfix_buffer_created() abort dict closure
+	    call super.on_quickfix_buffer_created()
+	    call popup_notification('ghcid-quickfix started.', #{
+	      \ time: 3000,
+	      \ tab: -1,
+	      \ border: [],
+	    \ })
+	  endfunction
+
+	  return this
+	endfunction
+
+	let g:ghcid_quickfix = #{
+	  \ showing: function('s:make_ghcid_event_hooks_to_show_started_on_popup'),
+	\ }
+<
 
 ------------------------------------------------------------------------------
 COMMANDS					*ghcid_quickfix-commands*

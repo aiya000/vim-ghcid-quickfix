@@ -49,11 +49,17 @@ repo = 'aiya000/vim-ghcid-quickfix'
 Auto open QuickFix window upon errors:
 
 ```vim
-let g:ghcid_quickfix_showing = 'quickfix_on_error'
+let g:ghcid_quickfix = #{
+  \ showing: 'quickfix_on_error',
+\ }
 ```
 
 Or 'popup_always' to popup all lines, using Vim's popup window.
 
 ```vim
-let g:ghcid_quickfix_showing = 'popup_always'
+let g:ghcid_quickfix = #{
+  \ showing: 'popup_always',
+\ }
 ```
+
+Please see `:help g:ghcid_quickfix_showing` to more informations.
