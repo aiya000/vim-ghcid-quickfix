@@ -155,6 +155,10 @@ ghcid_quickfix#stop()				*ghcid_quickfix#stop()*
 ------------------------------------------------------------------------------
 CHANGELOG					*ghcid_quickfix-changelog*
 
+	2019-11-28:
+	- Remove g:ghcid_quickfix_showing
+	- Add g:ghcid_quickfix.showing to define a function
+
 	2019-05-27:
 	- Remove g:ghcid_quickfix_show_only_error_occured
 	- Add g:ghcid_quickfix_showing
