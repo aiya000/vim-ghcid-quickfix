@@ -1,4 +1,4 @@
-" Please see `ghcid_quickfix#event_hooks#default#new` for what is made by this.
+" Please see `ghcid_quickfix#event_hooks#quickfix_on_start#new` for what is made by this.
 function! ghcid_quickfix#event_hooks#quickfix_on_error#new(qf_bufnr) abort
   let instance = {
     \ 'qf_bufnr': a:qf_bufnr,

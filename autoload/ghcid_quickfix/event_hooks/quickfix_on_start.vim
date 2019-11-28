@@ -2,7 +2,7 @@
 " (A mock for tests.)
 "
 " 'events'
-" - on_reloading(): Be called when ghcid says '^Reloading...' (before :caddexpr).
+" - on_quickfix_buffer_created(): Be called when ghcid_quickfix#start() is starting.
 " - on_outputting_line(line): Be called before showing a line on :caddexpr.
 "
 " qf_bufnr: a quickfix buffer that should be output ghcid lines.
