@@ -1,3 +1,7 @@
+let s:V = vital#ghcid_quickfix#new()
+
+let s:Msg = s:V.import('Vim.Message')
+
 " Please see `ghcid_quickfix#start()`
 let s:TERM_BUFFER_NAME = 'term-vim-ghcid-quickfix-ghcid' | lockvar s:TERM_BUFFER_NAME
 let s:OUTPUT_BUFFER_NAME = 'output-vim-ghcid-quickfix-ghcid' | lockvar s:OUTPUT_BUFFER_NAME
@@ -91,12 +95,24 @@ endfunction
 
 function! ghcid_quickfix#stop() abort
   let term_bufnr = bufnr(s:TERM_BUFFER_NAME)
+  if term_bufnr is -1
+    return
+  endif
+
   call term_setkill(term_bufnr, 'term')
-  execute 'bdelete!' term_bufnr
+  execute 'bwipe!' term_bufnr
 
   let output_bufnr = bufnr(s:OUTPUT_BUFFER_NAME)
+  if output_bufnr is -1
+    call s:Msg.error(
+      \ 'Illegal state.\n' ..
+      \ "the buffer '" .. s:TERM_BUFFER_NAME .. "' was existent.\n" ..
+      \ "But the buffer '" .. s:OUTPUT_BUFFER_NAME .. "' is not existent."
+    \ )
+  endif
+
   try
-    execute 'bdelete' output_bufnr
+    execute 'bwipe' output_bufnr
   catch /E516/
     " skip this if already deleted
   endtry
