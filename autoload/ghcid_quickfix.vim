@@ -54,7 +54,8 @@ function! s:make_new_scratch_buffer() abort
   try
     silent execute 'file' s:OUTPUT_BUFFER_NAME
   catch /E95/
-    execute 'bdelete!' s:OUTPUT_BUFFER_NAME
+    " Reopen
+    execute 'bwipe!' s:OUTPUT_BUFFER_NAME
     execute 'file' s:OUTPUT_BUFFER_NAME
   endtry
 
