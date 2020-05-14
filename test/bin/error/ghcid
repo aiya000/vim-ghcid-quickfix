@@ -1,1 +1,2 @@
-/path/to/Code.hs:00:0: error: Howdy :D
+#!/bin/bash
+echo '/path/to/Code.hs:00:0: error: Howdy :D'
