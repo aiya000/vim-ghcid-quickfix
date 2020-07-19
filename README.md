@@ -2,6 +2,8 @@
 
 - - -
 
+[![Build Status](https://travis-ci.org/aiya000/vim-ghcid-quickfix.svg?branch=master)](https://travis-ci.org/aiya000/vim-ghcid-quickfix)
+
 Increse your Haskell development via [ghcid](https://github.com/ndmitchell/ghcid)!
 
 - - -
