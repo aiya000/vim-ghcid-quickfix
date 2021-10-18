@@ -21,7 +21,8 @@ function! ghcid_quickfix#start(make_new_event_hooks, args) abort
   let ghcid = empty(a:args)
     \ ? 'ghcid'
     \ : 'ghcid ' . a:args
-  call term_start(ghcid, {
+
+  let s:opts = {
     \ 'out_io': 'buffer',
     \ 'err_io': 'buffer',
     \ 'out_buf': output_bufnr,
@@ -31,7 +32,13 @@ function! ghcid_quickfix#start(make_new_event_hooks, args) abort
     \ 'hidden': v:true,
     \ 'term_kill': 'term',
     \ 'term_name': s:TERM_BUFFER_NAME,
-  \ })
+  \ } 
+
+  if has('nvim') 
+    call termopen(ghcid, s:opts)
+  else
+    call term_start(ghcid, s:opts)
+  endif
 endfunction
 
 function! s:is_ghcid_quickfix_already_ran() abort
